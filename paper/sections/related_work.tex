@@ -1,0 +1,175 @@
+\section{2. Related Work}
+The mathematical modeling of opinion dynamics evaluates how information, social influence, and cognitive constraints shape consensus formation over networked agents\cite{degroot1974reaching}. Investigating status-based influence suppression intersects five established bodies of literature: classical averaging and bounded confidence models, time-varying networks and switched systems, cognitive anchoring and belief rigidity, adaptive weighting and resilient distributed control, and the sociology of peer sanctioning\cite{degroot1974reaching}. Integrating these domains clarifies how endogenous, asymmetric leveling pressures alter the stability landscape of distributed systems\cite{degroot1974reaching}.
+
+\subsection{Classical Consensus and Bounded Confidence Models}
+Linear opinion dynamics originate with the DeGroot model, in which agents iteratively update their states through convex combinations governed by a static, row-stochastic influence matrix\cite{degroot1974reaching}. Under standard conditions of strong connectivity and aperiodicity, the Perron-Frobenius theorem guarantees convergence to a uniform consensus value lying strictly within the convex hull of initial states\cite{degroot1974reaching}. Friedkin and Johnsen extended this framework by introducing static cognitive anchoring, shifting the system from consensus toward persistent disagreement\cite{degroot1974reaching,hajnal1958weak}. While these models establish basic averaging properties, their reliance on static edge weights prevents them from capturing networks that modify their communication structure in response to evolving agent states\cite{degroot1974reaching}.
+
+Hegselmann and Krause, as well as Deffuant et al., addressed state dependence through bounded confidence models\cite{degroot1974reaching,hajnal1958weak}. In these systems, agents interact only with peers whose opinions fall within a symmetric metric distance threshold, modeling homophily\cite{degroot1974reaching,hajnal1958weak}. Bounded confidence explains the formation of disconnected opinion clusters and ideological polarization\cite{degroot1974reaching,hajnal1958weak}. However, the interaction kernel remains symmetric and horizontal: communication depends on pairwise distance, $|x_i(t) - x_j(t)| \le \epsilon$, treating positive and negative differences identically\cite{degroot1974reaching,hajnal1958weak}.
+
+Bernardo, Altafini, and Vasca extended bounded confidence to asymmetric intervals, $[-l, u]$, allowing agents to possess different thresholds for opinions above and below their own\cite{hajnal1958weak}. While directional, their mechanism remains ego-relative and local: an agent discounts a neighbor exclusively if their pairwise distance exceeds an internal threshold\cite{hajnal1958weak}. Bernardo et al. prove that such asymmetric bounded confidence systems converge unconditionally to static opinion clusters in finite time, preserving local contractive hulls\cite{hajnal1958weak}.
+
+The tall poppy model departs fundamentally from this paradigm\cite{degroot1974reaching,hajnal1958weak}. Rather than evaluating local pairwise distances, it evaluates an agent's vertical rank against macroscopic, network-wide statistical moments\cite{hajnal1958weak}. An agent's outgoing influence is suppressed by all peers simultaneously whenever its standardized deviation from the global arithmetic mean is positive, regardless of pairwise proximity\cite{degroot1974reaching,hajnal1958weak}. Furthermore, coupling this vertical suppression with cognitive anchoring breaks local contraction, generating non-equilibrium limit cycles that cannot occur in standard bounded confidence models\cite{hajnal1958weak}.
+
+\subsection{Time-Varying Graphs and Switched Systems}
+Because status-based suppression recalculates weights at each step from current opinions, the interaction topology is inherently dynamic\cite{degroot1974reaching}. Early foundations by Moreau and Olfati-Saber and Murray established that time-varying consensus systems converge provided the communication graph maintains persistent connectivity over bounded time horizons\cite{degroot1974reaching,hajnal1958weak}.
+
+Convergence in time-varying linear consensus is frequently evaluated using non-homogeneous Markov chain theory\cite{degroot1974reaching,hajnal1958weak}. Hajnal formalized the ergodicity coefficient, proving that an infinite product of row-stochastic matrices converges to a rank-one matrix if the sum of their scrambling coefficients diverges\cite{degroot1974reaching,hajnal1958weak}. Cohen, Hajnal, and Newman demonstrated that when agents harden their positions over time by increasing diagonal self-weights, open-loop matrix products undergo sharp zero-one transitions between convergence and non-convergence\cite{degroot1974reaching,hajnal1958weak}. Touri and Nedić generalized these results using infinite flow properties across random and time-varying graphs\cite{degroot1974reaching,hajnal1958weak}.
+
+A critical theoretical distinction separates that literature from the model analyzed here\cite{hajnal1958weak}. Classical non-homogeneous Markov chain theorems evaluate open-loop systems where matrix sequences are exogenous or generated by uncoupled stochastic processes\cite{hajnal1958weak}. In the tall poppy model, the transition matrix is generated through closed-loop state feedback: $\tilde{W}(t) = \mathcal{M}(x(t))$\cite{hajnal1958weak}. When coupled with cognitive anchoring, the governing difference equation is affine rather than linear\cite{acemoglu2013opinion,hajnal1958weak}. The system is an autonomous, nonlinear switched dynamical system\cite{hajnal1958weak}. Ergodicity breakdown and sustained cycling in this model cannot be evaluated as an open-loop failure of matrix scrambling, but must be analyzed through discrete-time bifurcations, invariant set stability, and boundary-collision switching\cite{acemoglu2013opinion,hajnal1958weak}.
+
+\subsection{Cognitive Anchoring, Zealotry, and Belief Rigidity}
+Non-convergent opinion dynamics are commonly generated by introducing completely stubborn agents, or zealots\cite{degroot1974reaching,hajnal1958weak}. Mobilia, as well as Ghaderi and Srikant, established that stubborn agents permanently bias networks toward their opinions\cite{degroot1974reaching}. Acemoglu et al. proved that placing fixed zealots with opposing beliefs at opposite network ends prevents convergence, forcing opinions to fluctuate endlessly within a stationary distribution\cite{degroot1974reaching,hajnal1958weak}. In these formulations, ongoing fluctuation depends on agents who never adjust their initial estimates under any degree of social exposure\cite{degroot1974reaching,hajnal1958weak}.
+
+This study avoids the assumption of binary zealotry\cite{degroot1974reaching}. Instead, partial stubbornness is distributed across the network, grounded in cognitive dissonance theory\cite{degroot1974reaching}. Agents balance incoming peer evaluations against an anchor to their initial estimates\cite{degroot1974reaching}. In unpenalized networks, partial stubbornness preserves contraction, driving the system to a stationary configuration of persistent disagreement (fixed dissensus)\cite{acemoglu2013opinion}. Sustained periodic cycling requires the coupling of cognitive anchoring with state-dependent outgoing suppression\cite{degroot1974reaching,acemoglu2013opinion}. The anchor prevents accurate outliers from assimilating into the unpenalized group, creating the restoring force that destabilizes fixed points and sustains periodic cycling without requiring absolute zealots\cite{degroot1974reaching,acemoglu2013opinion,hajnal1958weak}.
+
+\subsection{Adaptive Weighting, Resilient Control, and Reputation Dynamics}
+The tall poppy mechanism also contrasts with adaptive influence algorithms that update weights based on historical prestige or adversarial filtering\cite{degroot1974reaching,hajnal1958weak}. In the DeGroot-Friedkin model, analyzed by Jia et al., agent self-appraisals evolve across sequential discussion topics based on reflected appraisal and network centrality, concentrating social power into elite subgroups\cite{degroot1974reaching,hajnal1958weak}. While the DeGroot-Friedkin model updates self-weights across issue sequences to reward high status, the tall poppy model penalizes high status within real-time, single-issue dynamics\cite{hajnal1958weak}.
+
+In distributed control, resilient consensus protocols protect networks against malicious or corrupted nodes\cite{hajnal1958weak}. The Weighted Mean-Subsequence-Reduced (W-MSR) algorithm, formulated by LeBlanc et al., enables benign agents to reach agreement by collecting neighbor states, sorting them, and discarding the $F$ largest and $F$ smallest values before computing convex combinations\cite{hajnal1958weak,leblanc2013resilient}. Abbas et al. demonstrated that network connectivity and resilient consensus can be preserved using trusted nodes that maintain uncompromised links\cite{hajnal1958weak}.
+
+The operational goals and mathematical structures of resilient control differ from the tall poppy model in three respects\cite{hajnal1958weak}:
+
+W-MSR is an engineering protocol designed to achieve consensus despite external attacks, whereas the tall poppy model is a behavioral mechanism that suppresses high performance\cite{hajnal1958weak}.
+
+W-MSR filters extreme values symmetrically at both tails within local neighborhoods, whereas the tall poppy penalty is asymmetric, targeting only positive deviations from the global mean\cite{hajnal1958weak}.
+
+W-MSR operates on purely decentralized neighbor rankings, whereas the tall poppy model normalizes opinions against network-wide population statistics\cite{hajnal1958weak}.
+
+Non-convergent oscillations in networked systems have also been studied using signed graphs\cite{hajnal1958weak,leblanc2013resilient}. Altafini demonstrated that introducing negative edge weights to represent antagonistic interactions produces bipartite consensus or oscillatory disagreement\cite{hajnal1958weak,leblanc2013resilient}. Kumar and Yao proved the existence of stable limit cycles in cooperative opinion networks by coupling continuous-time opinion dynamics with a discrete-time learning agent across hybrid timescales\cite{hajnal1958weak}. In contrast, the tall poppy model generates limit cycles within a positive row-stochastic network operating on a uniform discrete timescale, without signed edges, negative weights, or hybrid clocks\cite{hajnal1958weak}.
+
+Finally, benchmark algorithms based on historical variance tracking, such as anti-expert weighting, attempt to discount erratic agents by scaling weights inversely to rolling variance\cite{degroot1974reaching,friedkin1990social}. While effective in static aggregation, iterative execution in closed-loop consensus induces severe numerical instability: as opinions converge, variance drops toward machine precision, causing inverse weights to explode\cite{degroot1974reaching,acemoglu2013opinion}. The tall poppy operator avoids this numerical artifact by evaluating standardized deviations instantaneously, maintaining weights bounded strictly in $[0, 1]$\cite{degroot1974reaching}.
+
+\subsection{Sociological Foundations of Status Leveling}
+The functional asymmetry of the suppression operator is grounded in the sociology and social psychology of status leveling\cite{degroot1974reaching}. Feather formalized "tall poppy syndrome," compiling empirical evidence that social groups actively resent and penalize high achievers who outshine their peers\cite{degroot1974reaching,hajnal1958weak}. Feather and McKee demonstrated that this sanctioning behavior crosses cultural boundaries, serving as an informal leveling mechanism to enforce egalitarian norms or group conformity\cite{degroot1974reaching}.
+
+In anthropological research, Boehm documented "reverse dominance hierarchies," in which subordinates form coalitions to intentionality suppress individuals whose prestige or authority threatens group parity\cite{degroot1974reaching}. Portes noted parallel leveling pressures within social capital theory, showing that tightly knit communities frequently penalize ambitious members to prevent economic differentiation\cite{degroot1974reaching}.
+
+Existing mathematical opinion models assume that groups either gravitate toward those with similar views (homophily) or elevate those who perform best (prestige bias)\cite{degroot1974reaching}. The tall poppy literature documents an opposing social reality: human groups frequently penalize peers specifically because of their superior performance\cite{degroot1974reaching}. Formalizing this sociological leveling pressure as an asymmetric, state-dependent suppression operator establishes a quantitative framework for analyzing how anti-excellence behavior destabilizes mathematical consensus\cite{degroot1974reaching}.
+
+\input{sections/comparison_table}
+Paradigm
+
+Interaction Metric
+
+Directionality
+
+Symmetry
+
+Underlying Operator
+
+Long-Term Dynamics
+
+Key References
+
+Classical DeGroot
+
+Topological adjacency
+
+Fixed directed edges
+
+Weight-dependent
+
+Linear row-stochastic
+
+Uniform consensus
+
+DeGroot (1974)\cite{degroot1974reaching}
+
+Friedkin-Johnsen
+
+Adjacency + initial state
+
+Fixed directed edges
+
+Weight-dependent
+
+Affine contraction
+
+Fixed dissensus
+
+Friedkin & Johnsen (1990)\cite{degroot1974reaching,hajnal1958weak}
+
+Bounded Confidence (HK/DW)
+
+Metric distance $|x_i - x_j|$
+
+Local ego-relative
+
+Symmetric (undirected)
+
+State-dependent projection
+
+Clustered consensus
+
+Hegselmann & Krause (2002)\cite{degroot1974reaching,hajnal1958weak}
+
+Asymmetric BCM
+
+Asymmetric intervals $[-l, u]$
+
+Local ego-relative
+
+Asymmetric
+
+State-dependent projection
+
+Finite-time clustering
+
+Bernardo et al. (2022)\cite{hajnal1958weak}
+
+DeGroot-Friedkin
+
+Multi-issue centrality
+
+Reflected appraisal
+
+Dynamic self-weight
+
+Issue-to-issue discrete map
+
+Autocratic power collapse
+
+Jia et al. (2015)\cite{degroot1974reaching,hajnal1958weak}
+
+Resilient Consensus (W-MSR)
+
+Sorted local in-neighbors
+
+Local in-degree
+
+Symmetric (trims both tails)
+
+Trimmed local averaging
+
+Bounded resilient consensus
+
+LeBlanc et al. (2013)\cite{hajnal1958weak,leblanc2013resilient}
+
+Antagonistic Networks
+
+Signed adjacency
+
+Structural balance
+
+Signed weights (positive/negative)
+
+Signed Laplacian
+
+Bipartite consensus / oscillation
+
+Altafini (2013)\cite{hajnal1958weak,leblanc2013resilient}
+
+Tall Poppy Consensus (This Work)
+
+Standardized score $(x_i - \mu)/\sigma$
+
+Global sociocentric
+
+Asymmetric (suppresses upper tail)
+
+Switched affine map
+
+Regimes 1, 1B, 2, and 3 limit cycles
+
+Proposed Formulation\cite{degroot1974reaching,acemoglu2013opinion,hajnal1958weak}
+

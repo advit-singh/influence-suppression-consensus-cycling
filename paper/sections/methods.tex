@@ -1,0 +1,171 @@
+\section{6. Experimental Design}
+To empirically evaluate the stability transitions derived in the minimal three-agent realization across large-scale networks, this section establishes a discrete-time computational simulation framework\cite{degroot1974reaching}. The environment executes a factorial grid search across network topologies, population sizes, penalty profiles, cognitive anchoring levels, and structural cluster exemptions, logging 368,991 verified simulation executions\cite{degroot1974reaching,acemoglu2013opinion}. The experimental pipeline incorporates topological connectivity verification, baseline self-loop preservation, affine operator tracking, and spatial-temporal regime classification to prevent the numerical artifacts that distort naive consensus simulations\cite{acemoglu2013opinion}.
+
+\subsection{Simulation Framework and Parameter Grid}
+The computational testbed instantiates agent populations of size $N \in \{20,50,100,200\}$\cite{degroot1974reaching}. At $t = 0$, each agent $i$ is assigned a private scalar estimate drawn from a uniform distribution, $x_i(0) \sim \mathcal{U}(-1, 1)$\cite{degroot1974reaching}. The unweighted network ground truth is defined as the exact sample mean of these initial states\cite{degroot1974reaching}: $$\mu^* = \frac{1}{N} \sum_{i=1}^N x_i(0)$$
+
+To ensure that stability regimes and ergodicity failures reflect genuine dynamical properties rather than structural idiosyncrasies of a specific graph family, networks are instantiated across four distinct topological classes\cite{degroot1974reaching}:
+
+Erdős-Rényi (ER) Random Graphs: Parameterized with edge attachment probability $p = 0.2$\cite{degroot1974reaching}. Because small random graphs ($N = 20, p = 0.2$) operate near the connectivity threshold, instances are sampled using rejection sampling with verification via breadth-first search until the graph contains exactly one connected component\cite{acemoglu2013opinion}. This prevents disconnected partitions from inducing false consensus failures\cite{acemoglu2013opinion}.
+
+Barabási-Albert (BA) Scale-Free Networks: Generated using preferential attachment with $m = \min(2, N - 1)$ edges added per incoming node\cite{degroot1974reaching,friedkin1990social}. This yields heterogeneous degree distributions containing dense hub nodes while guaranteeing global connectivity\cite{acemoglu2013opinion}.
+
+Watts-Strogatz (WS) Small-World Networks: Instantiated with baseline circular degree $k = 4$ and edge rewiring probability $p = 0.1$ using connected ring-lattice realizations to combine high local clustering with short characteristic path lengths\cite{degroot1974reaching,acemoglu2013opinion}.
+
+$k$-Regular Graphs: Constructed with uniform node degree $k = 4$, enforcing structural homogeneity where every agent maintains an identical degree\cite{degroot1974reaching,acemoglu2013opinion}. If degree-node parity constraints require it, $k$ is adjusted to $k = 2$\cite{friedkin1990social}.
+
+To preserve aperiodicity and prevent artificial period-2 bipartite oscillations, every adjacency matrix is updated to include explicit diagonal self-loops ($a_{ii} = 1$) before row normalization\cite{acemoglu2013opinion}: $$W(0) = \text{diag}(A \mathbf{1})^{-1} A, \quad \text{where } a_{ii} = 1 ; \forall i \in V$$
+
+The parameter space spans five independent experimental axes\cite{degroot1974reaching}:
+
+Global Penalty Magnitude ($P$): Evaluated across eight levels, $P \in \{0.0,0.1,0.2,0.3,0.5,0.7,0.9,1.0\}$, sweeping from unpenalized social averaging to complete communication severance\cite{degroot1974reaching}.
+
+Partial Stubbornness ($\gamma_{stub}$): Tested across four anchoring values, $\gamma_{stub} \in \{0.0,0.1,0.2,0.5\}$, spanning pure social averaging ($\gamma_{stub} = 0.0$) to dominant cognitive retention ($\gamma_{stub} = 0.5$)\cite{degroot1974reaching}.
+
+Penalty Function Shape ($h(D)$): Evaluated across Linear, Step ($\theta = 0.5$), and Tanh formulations\cite{degroot1974reaching}.
+
+Kinship Cluster Fraction ($K$): Evaluated across four relative population thresholds, $K \in \{N,N/2,N/5,N/10\}$\cite{degroot1974reaching}. Cluster members are randomly selected at $t = 0$ and execute the in-group mutual exemption rule\cite{friedkin1990social,acemoglu2013opinion}.
+
+Initialization Variance: Each unique parameter combination is executed across 30 independent pseudo-random seeds ($S = {0, 1, \dots, 29}$), initializing fresh graph topologies, private estimates $x(0)$, and kinship index sets\cite{degroot1974reaching,friedkin1990social}.
+
+Each simulation runs for a fixed horizon of $T = 500$ discrete time steps\cite{degroot1974reaching}. To prevent computational bloat without sacrificing coverage, the parameter grid applies two pruning rules\cite{acemoglu2013opinion}:
+
+When $P = 0.0$, the suppression factor is identically $f_i(t) = 1.0$ for all nodes, rendering penalty shape and kinship fraction mathematically inert; hence, $P = 0.0$ is executed once per $(N, \text{topology}, \gamma_{stub}, \text{seed})$ tuple\cite{acemoglu2013opinion}.
+
+When $K = N$, all agents are mutually exempt, deactivating the penalty; runs where $K = N$ with $P > 0.0$ are pruned as identical duplicates of the $P = 0.0$ baseline\cite{acemoglu2013opinion}.
+
+\subsection{Ablation Models}
+To isolate the exact mechanical drivers of ergodicity failure and determine whether non-convergent cycling requires directional asymmetry or active temporal feedback, the pipeline integrates two structural ablation models\cite{degroot1974reaching}:
+
+Symmetric Penalty Ablation: This model modifies the one-sided suppression operator to penalize absolute standardized deviations, punishing upper outliers and lower outliers alike\cite{degroot1974reaching}: $$f_i(t) = \max\big(0, ; 1 - P \cdot h(|D_i(t)|)\big)$$ This configuration evaluates whether non-convergent cycling stems generally from suppressing extreme values at both distribution tails, or whether it requires the asymmetric, directional downward drag produced by penalizing only high performers\cite{degroot1974reaching}.
+
+Fixed Suppression Ablation (Static Weighting): This model calculates the standardized deviations and suppression factors once at initialization ($t = 0$) and locks the resulting matrix weights for all remaining time steps ($t = 1, \dots, 500$)\cite{degroot1974reaching,friedkin1990social}: $$f_i(t) = f_i(0), \quad \tilde{W}(t) = \tilde{W}(0) \quad \forall t \ge 0$$ Removing dynamic state feedback isolates whether sustained periodic limit cycles depend on ongoing closed-loop interactions or whether a static reduction in outlier influence suffices\cite{degroot1974reaching}.
+
+\subsection{Control Baselines}
+The proposed state-dependent penalty is benchmarked against three established consensus mechanisms from computational social science and distributed control\cite{degroot1974reaching}:
+
+Anti-Expert Baseline: Evaluates whether rolling historical variance tracking can suppress erratic agents without destabilizing network convergence\cite{degroot1974reaching}. A sliding ring buffer records each agent's raw state over the previous 20 time steps\cite{friedkin1990social,acemoglu2013opinion}. For $t \ge 2$, incoming influence weights are scaled inversely to the agent's rolling sample variance\cite{friedkin1990social,acemoglu2013opinion}: $$\text{Var}j(t) = \frac{1}{L} \sum{\tau=0}^{L-1} \big(x_j(t - \tau) - \bar{x}{j, t}\big)^2 + \epsilon_0$$ $$w'{ij}(t) = w_{ij}(0) \cdot \frac{1}{\text{Var}_j(t)}$$ where $L = \min(t + 1, 20)$ and $\epsilon_0 = 10^{-6}$ provides numerical regularization\cite{friedkin1990social,acemoglu2013opinion}. Rows are subsequently normalized to preserve stochasticity\cite{friedkin1990social}. During the initial burn-in phase ($t < 2$), agents default to baseline weights $W(0)$\cite{acemoglu2013opinion}.
+
+Inverse-Reputation Baseline: Penalizes agents based on cumulative historical deviation from the true initial mean $\mu^$\cite{degroot1974reaching,acemoglu2013opinion}. Over the same 20-step sliding window, incoming weights are scaled inversely to mean absolute deviation\cite{degroot1974reaching,friedkin1990social}: $$\text{MAD}j(t) = \frac{1}{L} \sum{\tau=0}^{L-1} |x_j(t - \tau) - \mu^|$$ $$w'{ij}(t) = w{ij}(0) \cdot \frac{1}{1 + \text{MAD}_j(t)}$$ This benchmarks the memoryless tall poppy penalty against an outcome-based reputation tracking algorithm with access to ground truth\cite{degroot1974reaching}.
+
+Stubborn-Agent Baseline: Implements the classic Friedkin-Johnsen / Acemoglu formulation of binary zealotry without status penalties ($P = 0$)\cite{degroot1974reaching,friedkin1990social}. Exactly half of the population ($N/2$ nodes, chosen uniformly at random) are designated absolute zealots ($\gamma_i = 1.0$), holding their estimates permanently fixed\cite{degroot1974reaching,friedkin1990social}. The remaining agents update via standard DeGroot averaging ($\gamma_i = 0.0$) using the static baseline matrix $W(0)$\cite{degroot1974reaching,friedkin1990social}: $$x_i(t+1) = \begin{cases} x_i(0), & \text{if } i \in V_{\text{zealot}} \ \sum_{j=1}^N w_{ij}(0) x_j(t), & \text{if } i \notin V_{\text{zealot}} \end{cases}$$ This isolates the effect of absolute cognitive rigidity from the proposed model's distributed partial stubbornness\cite{degroot1974reaching}.
+
+\subsection{Measurement and Regime Classification}
+At each discrete time step, the simulation verifies that the updated matrix $\tilde{W}(t)$ satisfies row-stochasticity ($\max_i |\sum_j \tilde{w}_{ij}(t) - 1.0| < 10^{-14}$) and confirms that agent estimates remain bounded within the convex hull of initial states\cite{degroot1974reaching,friedkin1990social}.
+
+To classify long-term network stability, state trajectories and transition operators are tracked over the final 100 simulation rounds ($t = 401$ to $t = 500$) using four primary metrics\cite{degroot1974reaching,acemoglu2013opinion}:
+
+Temporal Variance ($\text{Var}_{temp}$): Measures the average temporal volatility of individual agent estimates over the terminal window\cite{degroot1974reaching}: $$\text{Var}{temp} = \frac{1}{N} \sum{i=1}^N \left( \frac{1}{100} \sum_{t=401}^{500} \big(x_i(t) - \bar{x}i\big)^2 \right), \quad \text{where } \bar{x}i = \frac{1}{100} \sum{t=401}^{500} x_i(t)$$ Active limit cycles produce persistent non-zero temporal variance, whereas stationary fixed points drive $\text{Var}{temp} \to 0$\cite{acemoglu2013opinion}.
+
+Terminal Spatial Variance ($\sigma_{\infty}^2$): Measures opinion dispersion across the population at the final step $T = 500$\cite{acemoglu2013opinion}: $$\sigma_{\infty}^2 = \frac{1}{N} \sum_{i=1}^N \big(x_i(500) - \mu(500)\big)^2$$ This metric differentiates genuine collective consensus ($\sigma_{\infty}^2 \to 0$) from frozen, polarized disagreement ($\sigma_{\infty}^2 > 0$)\cite{acemoglu2013opinion}.
+
+Product Hajnal Scrambling Coefficient ($\delta(M)$): Evaluates the terminal contractive capacity of the actual affine dynamical operator\cite{degroot1974reaching,acemoglu2013opinion}. Because $\gamma_{stub} > 0$, matrix contraction is measured on the true affine transition operator $H(t) \in \mathbb{R}^{N \times N}$\cite{acemoglu2013opinion}: $$H_{ij}(t) = (1 - \gamma_{stub}) \tilde{w}{ij}(t) + \gamma{stub} \delta_{ij}$$ The cumulative backward product over the terminal 100 rounds is computed as\cite{acemoglu2013opinion}: $$M = \prod_{\tau=0}^{99} H(500 - 1 - \tau) = H(499) H(498) \cdots H(400)$$ The contraction coefficient is evaluated via the pairwise $L_1$ row radius\cite{degroot1974reaching}: $$\delta(M) = \frac{1}{2} \max_{i, j} \sum_{k=1}^N |M_{ik} - M_{jk}|$$
+
+Consensus Error ($E_{cons}$): Quantifies estimation accuracy relative to the true initial mean\cite{degroot1974reaching}: $$E_{cons} = |\mu(500) - \mu^*|$$
+
+Using these metrics, every simulation execution is assigned to one of four mutually exclusive stability regimes\cite{acemoglu2013opinion}:
+
+Regime 3 (Non-convergent Cycling): Assigned if terminal temporal variance exceeds the oscillation threshold\cite{degroot1974reaching,acemoglu2013opinion}: $$\text{Var}_{temp} \ge 10^{-3}$$ This threshold provides numerical evidence of active, sustained limit-cycle oscillation\cite{degroot1974reaching}.
+
+Regime 1 (Biased Convergence): Assigned if the network achieves stationary consensus, exhibiting low temporal variance and near-zero terminal spatial variance\cite{degroot1974reaching,acemoglu2013opinion}: $$\text{Var}{temp} < 10^{-3} \quad \text{and} \quad \sigma{\infty}^2 < 10^{-4}$$ All agents converge to an identical scalar estimate\cite{acemoglu2013opinion}.
+
+Regime 1B (Fixed Dissensus): Assigned if agent estimates freeze into a stationary configuration of persistent disagreement\cite{acemoglu2013opinion}: $$\text{Var}{temp} < 10^{-4} \quad \text{and} \quad \sigma{\infty}^2 \ge 10^{-4}$$ Opinions cease moving over time ($\text{Var}_{temp} \approx 0$), but spatial variance remains positive because cognitive anchors hold agents at distinct fixed points\cite{acemoglu2013opinion}.
+
+Regime 2 (Slow Mixing): Assigned to intermediate executions that do not satisfy the criteria for stationary consensus, fixed dissensus, or active cycling, capturing prolonged relaxation transients and boundary chattering\cite{degroot1974reaching,acemoglu2013opinion}: $$\text{Var}{temp} < 10^{-3}, \quad \text{Var}{temp} \ge 10^{-4}, \quad \text{and} \quad \sigma_{\infty}^2 \ge 10^{-4}$$
+
+\input{sections/parameter_table}
+Parameter Category
+
+Variable Symbol
+
+Evaluated Values / Settings
+
+Combinatorial Scope
+
+Network Topologies
+
+$G$
+
+Erdős-Rényi ($p=0.2$), Barabási-Albert ($m=2$), Watts-Strogatz ($k=4, p=0.1$), $k$-Regular ($k=4$)
+
+\section{graph classes (connected, self-loops added)\cite{degroot1974reaching,acemoglu2013opinion}}
+Population Sizes
+
+$N$
+
+$20, 50, 100, 200$ nodes
+
+\section{network scales\cite{degroot1974reaching}}
+Initial States
+
+$x_i(0)$
+
+Continuous uniform distribution $\mathcal{U}(-1, 1)$
+
+Zero-centered bounded opinion domain\cite{degroot1974reaching}
+
+Penalty Magnitude
+
+$P$
+
+$0.0, 0.1, 0.2, 0.3, 0.5, 0.7, 0.9, 1.0$
+
+\section{suppression severity levels\cite{degroot1974reaching}}
+Cognitive Anchoring
+
+$\gamma_{stub}$
+
+$0.0, 0.1, 0.2, 0.5$
+
+\section{stubbornness levels\cite{degroot1974reaching}}
+Penalty Response Curves
+
+$h(D)$
+
+Linear ($D$), Step ($\theta=0.5$), Tanh ($\tanh(D)$)
+
+\section{functional shapes\cite{degroot1974reaching}}
+Kinship Cluster Size
+
+$K$
+
+$N, N/2, N/5, N/10$
+
+\section{in-group immunity fractions\cite{degroot1974reaching}}
+Ablation Configurations
+
+$\text{Model}$
+
+Proposed (Directed Dynamic), Symmetric (Both Tails), Fixed (Static $t=0$)
+
+\section{structural mechanism variants\cite{degroot1974reaching}}
+Baseline Benchmarks
+
+$\text{Control}$
+
+Anti-Expert (Inverse Variance), Inverse-Reputation (MAD), Stubborn-Mix (50% Zealots)
+
+\section{comparative algorithms\cite{degroot1974reaching}}
+Stochastic Replications
+
+$\text{Seed}$
+
+\section{independent pseudo-random seeds per parameter tuple}
+Variance reduction across realizations\cite{degroot1974reaching}
+
+Simulation Horizon
+
+$T$
+
+$T = 500$ discrete time steps (final 100 steps analyzed)
+
+Fixed evaluation window\cite{degroot1974reaching}
+
+Total Validated Runs
+
+—
+
+368,991 completed executions
+
+Full factorial coverage (pruned duplicates)\cite{acemoglu2013opinion}
+

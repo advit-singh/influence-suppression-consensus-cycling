@@ -1,0 +1,17 @@
+\begin{table*}[htbp]
+  \centering
+  \caption{Comparison of consensus and opinion dynamics frameworks.}
+  \label{tab:comparison}
+  \small
+  \begin{tabular}{p{2.2cm}p{2.4cm}p{2.0cm}p{1.6cm}p{2.4cm}p{2.2cm}p{2.0cm}}
+    \toprule
+    Paradigm & Interaction metric & Directionality & Symmetry & Operator & Long-term dynamics & References \\
+    \midrule
+    DeGroot & Adjacency & Fixed edges & Weight-dependent & Linear row-stochastic & Uniform consensus & \cite{degroot1974reaching} \\
+    Friedkin--Johnsen & Adjacency + anchor & Fixed edges & Weight-dependent & Affine row-stochastic & Fixed dissensus & \cite{friedkin1990social} \\
+    Bounded confidence & Pairwise distance & Local threshold & Symmetric & State-dependent & Opinion clusters & \cite{bernardo2022finite} \\
+    W-MSR resilient control & Neighbor ranking & Local filter & Symmetric tails & Trimmed mean & Robust consensus & \cite{leblanc2013resilient} \\
+    Tall poppy (this work) & Global standardized rank & Global broadcast & Asymmetric & Switched affine & Four stability regimes & --- \\
+    \bottomrule
+  \end{tabular}
+\end{table*}

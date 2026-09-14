@@ -1,0 +1,17 @@
+\begin{table}[htbp]
+  \centering
+  \caption{Cross-model performance summary across validated simulation runs.}
+  \label{tab:cross-model}
+  \begin{tabular}{lrrrrrr}
+    \toprule
+    Model & Runs & R1 (\%) & R1B (\%) & R2 (\%) & R3 (\%) & $\bar{E}_{cons}$ \\
+    \midrule
+    Proposed & 122{,}880 & 23.76 & 74.56 & 1.67 & 0.02 & 0.0924 \\
+    Symmetric & 118{,}911 & 22.89 & 72.39 & 4.18 & 0.54 & 0.0257 \\
+    Fixed suppression & 122{,}880 & 24.02 & 75.98 & 0.00 & 0.00 & 0.0915 \\
+    Anti-expert & 1{,}920 & 20.89 & 2.19 & 22.40 & 54.53 & 0.0766 \\
+    Inverse reputation & 1{,}920 & 25.00 & 75.00 & 0.00 & 0.00 & 0.0119 \\
+    Stubborn mix & 480 & 0.00 & 100.00 & 0.00 & 0.00 & 0.0620 \\
+    \bottomrule
+  \end{tabular}
+\end{table}

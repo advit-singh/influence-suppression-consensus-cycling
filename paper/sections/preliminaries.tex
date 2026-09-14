@@ -1,0 +1,69 @@
+\section{3. Preliminaries}
+This section establishes the mathematical foundations required to analyze distributed consensus under endogenous, state-dependent weight suppression. It formalizes linear consensus protocols, characterizes backward matrix products and ergodicity coefficients, and formulates the switched affine framework that governs networks with cognitive anchoring.
+
+\subsection{The Classical Linear Consensus Framework}
+Let a social network be represented by a directed graph $G = (V, E)$, where $V = {1, 2, \dots, N}$ denotes the set of $N$ interacting agents and $E \subseteq V \times V$ represents directed communication links. A directed edge $(j, i) \in E$ indicates that agent $i$ receives information directly from agent $j$. The network structure is captured by an adjacency matrix $A = [a_{ij}] \in \mathbb{R}^{N \times N}$, where $a_{ij} = 1$ if $(j, i) \in E$ and $a_{ij} = 0$ otherwise. To guarantee a baseline degree of individual self-confidence, each agent maintains a self-loop, $a_{ii} = 1$, for all $i \in V$.
+
+Each agent $i$ maintains a scalar state $x_i(t) \in \mathbb{R}$ at discrete time step $t \in \mathbb{N}_0 = \{0,1,2,\ldots\}$, representing its estimate or opinion. The collective network state is described by the column vector: $$x(t) = [x_1(t), x_2(t), \dots, x_N(t)]^T \in \mathbb{R}^N$$
+
+In the classical DeGroot model, agents synchronously update their estimates via convex combinations of their incoming neighbors' states\cite{degroot1974reaching}. This interaction is governed by an influence matrix $W = [w_{ij}] \in \mathbb{R}^{N \times N}$ through the linear difference equation: $$x(t+1) = W x(t)$$
+
+The matrix $W$ is constrained to be row-stochastic, satisfying two core axioms\cite{degroot1974reaching}:
+
+Non-negativity: $w_{ij} \ge 0$ for all $i, j \in V$\cite{degroot1974reaching}.
+
+Unit row sums: $\sum_{j=1}^N w_{ij} = 1$ for all $i \in V$\cite{degroot1974reaching}.
+
+Row-stochasticity guarantees that the update rule is a convex combination of neighboring states\cite{degroot1974reaching}. Consequently, agent estimates satisfy the convex hull invariance property\cite{degroot1974reaching}: $$\min_{k \in V} x_k(0) \le \min_{k \in V} x_k(t) \le x_i(t+1) \le \max_{k \in V} x_k(t) \le \max_{k \in V} x_k(0), \quad \forall i \in V, ; t \ge 0$$ The network state remains confined within the hypercube defined by the extreme initial opinions, precluding finite-time numerical explosion\cite{degroot1974reaching}.
+
+By the Perron-Frobenius theorem, any row-stochastic matrix $W$ possesses a trivial dominant eigenvalue $\lambda_1(W) = 1$ with an associated right eigenvector of all ones, $\mathbf{1} = [1, 1, \dots, 1]^T$\cite{degroot1974reaching}. If the graph $G$ is strongly connected and aperiodic, all non-dominant eigenvalues satisfy $|\lambda_k(W)| < 1$ for $k \in {2, \dots, N}$\cite{degroot1974reaching}. Under these conditions, the matrix power $W^t$ converges asymptotically as $t \to \infty$ to a rank-one matrix $\mathbf{1} v^T$, where $v \in \mathbb{R}^N$ is the normalized left Perron eigenvector satisfying $v^T W = v^T$ and $v^T \mathbf{1} = 1$. The state vector converges to a uniform consensus: $$\lim_{t \to \infty} x(t) = (\mathbf{1} v^T) x(0) = (v^T x(0)) \mathbf{1}$$
+
+\subsection{Time-Varying Topologies and Backward Products}
+When interaction weights vary dynamically, the static matrix $W$ is replaced by a sequence of instantaneous row-stochastic matrices ${W(t)}_{t=0}^\infty$\cite{degroot1974reaching}. The discrete-time update becomes: $$x(t+1) = W(t) x(t)$$
+
+Unrolling this recurrence from $t = 0$ to an arbitrary terminal horizon $T \in \mathbb{N}$ yields: $$x(T) = U(T, 0) x(0)$$ where $U(T, 0)$ is the cumulative transition operator across the interval $[0, T)$\cite{degroot1974reaching}. Because matrix multiplication is non-commutative, the operator must be evaluated as a backward matrix product\cite{acemoglu2013opinion}: $$U(T, 0) = \prod_{\tau=0}^{T-1} W(T - 1 - \tau) = W(T-1) W(T-2) \cdots W(1) W(0)$$
+
+In non-homogeneous Markov chains, forward products of the form $W(0) W(1) \cdots W(T-1)$ govern the propagation of row probability distributions, $\pi(T) = \pi(0) W(0) \cdots W(T-1)$\cite{acemoglu2013opinion}. By contrast, multi-agent consensus updates operate on column vectors via backward products\cite{acemoglu2013opinion}. Because each constituent matrix $W(t)$ is row-stochastic, their backward product $U(T, 0)$ is also row-stochastic for any finite $T \ge 1$\cite{degroot1974reaching}.
+
+Weak ergodicity occurs when the rows of the cumulative transition matrix become asymptotically identical as $T \to \infty$\cite{degroot1974reaching}: $$\lim_{T \to \infty} \left( U_{ik}(T, 0) - U_{jk}(T, 0) \right) = 0, \quad \forall i, j, k \in V$$ Weak ergodicity is equivalent to achieving consensus from any initial state distribution\cite{degroot1974reaching}.
+
+A critical structural distinction exists between open-loop and closed-loop systems\cite{hajnal1958weak}. Classical non-homogeneous Markov chain theory treats ${W(t)}$ as an exogenous, uncoupled matrix sequence\cite{hajnal1958weak}. In the tall poppy model, the matrix $W(t)$ is generated by state feedback, $W(t) = \mathcal{M}(x(t))$\cite{hajnal1958weak}. The network constitutes an autonomous nonlinear switched dynamical system, requiring stability criteria that accommodate state-dependent topological transitions\cite{hajnal1958weak}.
+
+\subsection{Ergodicity and Scrambling Coefficients}
+The contractive capacity of row-stochastic matrices is quantified by coefficients of ergodicity\cite{degroot1974reaching}. For any row-stochastic matrix $W \in \mathbb{R}^{N \times N}$, the Hajnal coefficient of ergodicity, $\delta(W)$, measures the maximum $L_1$-distance between any pair of rows\cite{degroot1974reaching}: $$\delta(W) = \frac{1}{2} \max_{i, j \in V} |W_{i\cdot} - W_{j\cdot}|1 = \frac{1}{2} \max{i, j \in V} \sum_{k=1}^N |w_{ik} - w_{jk}|$$
+
+Using the algebraic identity $|a - b| = a + b - 2\min(a, b)$ for non-negative scalars, and noting that row sums equal one, the summation expands to\cite{acemoglu2013opinion}: $$\sum_{k=1}^N |w_{ik} - w_{jk}| = \sum_{k=1}^N w_{ik} + \sum_{k=1}^N w_{jk} - 2 \sum_{k=1}^N \min(w_{ik}, w_{jk}) = 2 - 2 \sum_{k=1}^N \min(w_{ik}, w_{jk})$$
+
+Substituting this back into the formulation yields an equivalent characterization based on shared support\cite{acemoglu2013opinion}: $$\delta(W) = 1 - \min_{i, j \in V} \sum_{k=1}^N \min(w_{ik}, w_{jk})$$
+
+The Hajnal coefficient satisfies $0 \le \delta(W) \le 1$\cite{degroot1974reaching}. The boundary values define specific network configurations\cite{degroot1974reaching}:
+
+$\delta(W) = 0$: All rows of $W$ are identical\cite{degroot1974reaching}. The matrix has rank one, corresponding to immediate consensus\cite{degroot1974reaching}.
+
+$\delta(W) = 1$: There exists at least one pair of agents $(i, j)$ that share no common support, meaning $\min(w_{ik}, w_{jk}) = 0$ for all $k \in V$\cite{degroot1974reaching,acemoglu2013opinion}. Agents $i$ and $j$ draw influence from completely disjoint subsets of the network\cite{degroot1974reaching}.
+
+A matrix is scrambling if $\delta(W) < 1$\cite{degroot1974reaching}. Complementary to $\delta(W)$, the Dobrushin scrambling coefficient, $\alpha(W) = 1 - \delta(W)$, measures the minimum mutual overlap between any two rows\cite{acemoglu2013opinion,hajnal1958weak}: $$\alpha(W) = \min_{i, j \in V} \sum_{k=1}^N \min(w_{ik}, w_{jk})$$
+
+For any two row-stochastic matrices $A$ and $B$, the contraction coefficient is sub-multiplicative with respect to row diameter\cite{acemoglu2013opinion}: $$\delta(AB) \le \delta(A) \delta(B)$$ or, in terms of scrambling\cite{acemoglu2013opinion}: $$1 - \alpha(AB) \le (1 - \alpha(A))(1 - \alpha(B))$$
+
+Let $|x|{osc} = \max{i} x_i - \min_{i} x_i$ denote the oscillation seminorm on $\mathbb{R}^N$. Applying a stochastic matrix $W$ contracts the state diameter\cite{hajnal1958weak}: $$|W x|{osc} \le \delta(W) |x|{osc} = (1 - \alpha(W)) |x|_{osc}$$
+
+Under open-loop exogenous switching, an infinite product $\lim_{T \to \infty} U(T, 0)$ converges to a rank-one matrix if and only if the network can be partitioned into contiguous multi-step intervals $[t_k, t_{k+1})$ such that the sum of the scrambling coefficients of the composite blocks diverges\cite{acemoglu2013opinion,hajnal1958weak}: $$\sum_{k=0}^\infty \alpha(U(t_{k+1}, t_k)) = \infty \iff \lim_{K \to \infty} \prod_{k=0}^K \delta(U(t_{k+1}, t_k)) = 0$$
+
+An instantaneous matrix with $\delta(W(t)) = 1$ does not inherently block consensus\cite{acemoglu2013opinion,hajnal1958weak}. If disjoint pairs at step $t$ establish shared paths of influence across a finite window $B$, the multi-step operator satisfies $\delta(U(t+B, t)) < 1$, restoring contraction\cite{acemoglu2013opinion,hajnal1958weak}. Weak ergodicity fails only when structural disconnections persist across infinite time horizons\cite{degroot1974reaching,hajnal1958weak}.
+
+\subsection{Switched Affine Consensus and State Augmentation}
+Standard linear consensus models cannot sustain non-trivial oscillations because stochastic matrices monotonically contract the state diameter toward zero\cite{hajnal1958weak}. To prevent complete assimilation, cognitive anchoring is introduced through a partial stubbornness parameter, $\gamma_{stub} \in [0, 1)$\cite{degroot1974reaching}. The resulting discrete-time update rule takes an affine, non-homogeneous form\cite{degroot1974reaching,acemoglu2013opinion}: $$x(t+1) = (1 - \gamma_{stub}) \tilde{W}(t) x(t) + \gamma_{stub} x(0)$$ where $\tilde{W}(t) = \mathcal{M}(x(t))$ is the state-dependent, row-normalized influence matrix\cite{degroot1974reaching,hajnal1958weak}.
+
+Equation (13) alters the contraction mechanics of the network\cite{acemoglu2013opinion,hajnal1958weak}. Because $\gamma_{stub} > 0$, the state matrix multiplying $x(t)$ is $A(t) = (1 - \gamma_{stub}) \tilde{W}(t)$\cite{acemoglu2013opinion,hajnal1958weak}. Its row sums satisfy: $$\sum_{j=1}^N A_{ij}(t) = (1 - \gamma_{stub}) \sum_{j=1}^N \tilde{w}{ij}(t) = 1 - \gamma{stub} < 1$$ The matrix $A(t)$ is strictly sub-stochastic\cite{acemoglu2013opinion,hajnal1958weak}. Applying the induced infinity norm shows that the linear operator is an unconditional contraction mapping on $\mathbb{R}^N$ at every time step\cite{acemoglu2013opinion,hajnal1958weak}: $$|A(t)|\infty = \max{i \in V} \sum_{j=1}^N |A_{ij}(t)| = 1 - \gamma_{stub} < 1$$
+
+Evaluating the oscillation seminorm on the stubborn update yields\cite{hajnal1958weak}: $$|x(t+1)|{osc} \le (1 - \gamma{stub}) \delta(\tilde{W}(t)) |x(t)|{osc} + \gamma{stub} |x(0)|_{osc}$$
+
+This inequality illustrates why the system does not converge to a uniform consensus\cite{acemoglu2013opinion,hajnal1958weak}. Even if $\tilde{W}(t)$ maintains scrambling properties ($\delta(\tilde{W}(t)) < 1$), the affine forcing vector $b = \gamma_{stub} x(0)$ continuously injects initial opinion dispersion back into the state space\cite{acemoglu2013opinion,hajnal1958weak}. The network settles into persistent disagreement, denoted as fixed dissensus, where states freeze into an equilibrium vector $x^* \notin \text{span}(\mathbf{1})$ satisfying\cite{acemoglu2013opinion}: $$x^* = \left( I - (1 - \gamma_{stub}) \tilde{W}(x^*) \right)^{-1} \gamma_{stub} x(0)$$
+
+To embed this affine system into a stochastic framework, the state vector $x(t) \in \mathbb{R}^N$ can be lifted into an augmented coordinate space, $\tilde{x}(t) = [x(t)^T, 1]^T \in \mathbb{R}^{N+1}$\cite{acemoglu2013opinion}: $$\begin{bmatrix} x(t+1) \ 1 \end{bmatrix} = \begin{bmatrix} (1 - \gamma_{stub}) \tilde{W}(t) & \gamma_{stub} x(0) \ \mathbf{0}^T & 1 \end{bmatrix} \begin{bmatrix} x(t) \ 1 \end{bmatrix}$$
+
+The augmented matrix in Equation (16) is strictly row-stochastic of dimension $(N+1) \times (N+1)$\cite{acemoglu2013opinion}. The $(N+1)$-th coordinate acts as an invariant absorbing state that anchors the dynamics\cite{acemoglu2013opinion}. This representation preserves the row-stochastic convex hull property: every agent estimate $x_i(t)$ remains bounded within the convex hull of the initial private estimates ${x_1(0), \dots, x_N(0)}$ for all $t \ge 0$\cite{degroot1974reaching,acemoglu2013opinion}.
+
+The stability regimes of this system are characterized by the interaction between the contraction factor $(1 - \gamma_{stub})$, the state-dependent switching surfaces of $\tilde{W}(x(t))$, and the cognitive anchor $\gamma_{stub} x(0)$\cite{acemoglu2013opinion,hajnal1958weak}. When the leveling penalty is extreme, the switching surface destabilizes the stationary fixed point $x^*$, inducing border-collision bifurcations that give rise to self-sustaining periodic limit cycles\cite{acemoglu2013opinion,hajnal1958weak}.
+

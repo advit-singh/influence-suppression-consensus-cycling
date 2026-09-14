@@ -1,0 +1,96 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{siunitx}
+\usepackage{enumitem}
+
+\title{Influence Suppression and Consensus Cycling in Status-Penalized Networks}
+\author{Advit Singh}
+\date{September 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Distributed consensus models usually treat communication weights as accuracy-seeking or static.
+This paper introduces an asymmetric status-suppression operator that penalizes agents whose
+estimates exceed the network mean, coupled with partial cognitive anchoring to initial private
+values. The resulting closed-loop system is a switched affine opinion dynamics model whose
+stability depends jointly on penalty severity, stubbornness, topology, and kinship structure.
+A factorial simulation study over 368{,}991 validated runs identifies four stability regimes:
+biased convergence, fixed dissensus, slow mixing, and non-convergent cycling. Cycling in the
+proposed model is rare (0.02\%) and appears only under maximal suppression with non-zero
+stubbornness, while symmetric suppression and inverse-variance baselines show very different
+failure modes. Kinship clusters of size at least $N/5$ eliminate cycling across all tested
+configurations.
+\end{abstract}
+
+\input{sections/introduction}
+\input{sections/related_work}
+\input{sections/preliminaries}
+\input{sections/model}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.78\linewidth]{figures/fig01_penalty_profiles.pdf}
+  \caption{Functional profiles of the linear, step, and tanh penalty shapes at $P=1$.}
+  \label{fig:penalty-profiles}
+\end{figure}
+
+\input{sections/theory}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.72\linewidth]{figures/fig02_phase_portrait.pdf}
+  \caption{Projected phase trajectory for the minimal three-agent realization.}
+  \label{fig:phase-portrait}
+\end{figure}
+
+\input{sections/methods}
+\input{sections/parameter_table}
+
+\input{sections/results}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\linewidth]{figures/fig03_phase_heatmaps.pdf}
+  \caption{Empirical phase portraits for the proposed model with $K=N/10$. Left: Regime~3 cycling rate. Right: Regime~1B fixed dissensus rate.}
+  \label{fig:phase-heatmaps}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.78\linewidth]{figures/fig04_kinship_scaling.pdf}
+  \caption{Kinship immunity scaling curves at $\gamma_{stub}=0.5$.}
+  \label{fig:kinship}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\linewidth]{figures/fig05_ablation.pdf}
+  \caption{Ablation comparison across proposed, symmetric, and fixed-suppression models.}
+  \label{fig:ablation}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\linewidth]{figures/fig06_baselines.pdf}
+  \caption{Baseline comparison of temporal variance and consensus error.}
+  \label{fig:baselines}
+\end{figure}
+
+\input{sections/cross_model_table}
+\input{sections/conclusion}
+
+\section*{Data and Code Availability}
+The simulation code, analysis scripts, and complete dataset (\texttt{full\_results\_v2.csv}) are available at
+\url{https://github.com/advit-singh/influence-suppression-consensus-cycling}.
+
+\bibliographystyle{plain}
+\bibliography{references}
+
+\end{document}

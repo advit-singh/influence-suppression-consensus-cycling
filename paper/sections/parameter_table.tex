@@ -1,0 +1,21 @@
+\begin{table*}[htbp]
+  \centering
+  \caption{Experimental parameter grid and combinatorial scope.}
+  \label{tab:parameter-grid}
+  \begin{tabular}{lll}
+    \toprule
+    Category & Symbol & Evaluated settings \\
+    \midrule
+    Topologies & $G$ & ER ($p=0.2$), BA ($m=2$), WS ($k=4,p=0.1$), $k$-regular ($k=4$) \\
+    Population sizes & $N$ & 20, 50, 100, 200 \\
+    Initial states & $x_i(0)$ & Uniform on $[-1,1]$ \\
+    Penalty magnitude & $P$ & 0.0, 0.1, 0.2, 0.3, 0.5, 0.7, 0.9, 1.0 \\
+    Stubbornness & $\gamma_{stub}$ & 0.0, 0.1, 0.2, 0.5 \\
+    Penalty shape & $h(D)$ & Linear, Step, Tanh \\
+    Kinship fraction & $K$ & $N$, $N/2$, $N/5$, $N/10$ \\
+    Replications & seed & 30 seeds per configuration \\
+    Horizon & $T$ & 500 steps (terminal window: 100 steps) \\
+    Validated runs & --- & 368{,}991 completed executions \\
+    \bottomrule
+  \end{tabular}
+\end{table*}

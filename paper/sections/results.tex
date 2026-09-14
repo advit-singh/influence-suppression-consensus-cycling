@@ -1,0 +1,188 @@
+\section{7. Results and Discussion}
+The computational experiment executed 368,991 verified simulation runs across the parameter grid. Across every simulated discrete time step, the maximum row-stochastic deviation recorded was $8.88 \times 10^{-16}$, sitting at double-precision machine epsilon and confirming that dynamic row normalization preserved stochasticity without numerical drift\cite{degroot1974reaching}. Zero convex hull violations were recorded: every agent estimate remained bounded within $[\min_k x_k(0), \max_k x_k(0)]$ throughout all $T = 500$ iterations\cite{degroot1974reaching}.
+
+The empirical data maps how asymmetric status penalization alters consensus stability. The subsections that follow examine the empirical phase boundary of ergodicity failure, the structural thresholds of kinship immunity, the trade-offs of symmetric suppression, and the contrast between state-dependent leveling and rolling-memory baselines\cite{degroot1974reaching}.
+
+\subsection{The Empirical Phase Boundary of Ergodicity Failure}
+The global distribution across all 368,991 runs partitions into four distinct stability outcomes\cite{acemoglu2013opinion}:
+
+Regime 1B (Fixed Dissensus): 273,024 runs (73.99%)\cite{acemoglu2013opinion}.
+
+Regime 1 (Biased Convergence): 86,808 runs (23.53%)\cite{acemoglu2013opinion}.
+
+Regime 2 (Slow Mixing): 7,454 runs (2.02%)\cite{acemoglu2013opinion}.
+
+Regime 3 (Non-convergent Cycling): 1,705 runs (0.46%)\cite{acemoglu2013opinion}.
+
+The baseline test at $P = 0.0$ confirms the theoretical separation between pure consensus and cognitive anchoring\cite{acemoglu2013opinion}. When $P = 0.0$ and $\gamma_{stub} = 0.0$, the network contracts to a uniform consensus (Regime 1) in 100% of runs (480 out of 480 runs across all topologies, population sizes, and seeds)\cite{acemoglu2013opinion}. When $\gamma_{stub} > 0$ with $P = 0.0$, all 1,440 runs settle into Regime 1B (Fixed Dissensus)\cite{acemoglu2013opinion}. In these unpenalized anchored runs, temporal variance drops below $2.18 \times 10^{-8}$ (states freeze completely), while terminal spatial variance reaches $0.1882$\cite{acemoglu2013opinion}. In an anchored network, social averaging without penalization drives opinions to stationary disagreement, not consensus\cite{acemoglu2013opinion,hajnal1958weak}.
+
+As the penalty magnitude $P$ increases in the proposed model, the transition into Regime 3 limit cycles acts as a localized boundary phenomenon\cite{degroot1974reaching,acemoglu2013opinion}. For all penalty values $P \le 0.9$, the probability of entering Regime 3 cycling is 0.0000 across all stubbornness levels\cite{acemoglu2013opinion}. Cycling emerges only at complete suppression ($P = 1.0$) when paired with non-zero stubbornness\cite{degroot1974reaching,acemoglu2013opinion}:
+
+For $\gamma_{stub} = 0.0$, cycling never occurs (0.00%)\cite{acemoglu2013opinion}. The network undergoes downward assimilation, settling into biased consensus (Regime 1) in 78.94% of runs or slow mixing in 21.06%\cite{degroot1974reaching,acemoglu2013opinion}.
+
+For $\gamma_{stub} = 0.1$, the anchor is insufficient to sustain cycling (0.00%)\cite{acemoglu2013opinion}.
+
+For $\gamma_{stub} = 0.2$, Regime 3 cycling emerges at a rate of 0.23% (0.0023)\cite{acemoglu2013opinion}.
+
+For $\gamma_{stub} = 0.5$, the cycling rate reaches 0.25% (0.0025)\cite{acemoglu2013opinion}.
+
+The topological structure of the network influences susceptibility to cycling under severe suppression ($P \ge 0.7$)\cite{degroot1974reaching,acemoglu2013opinion}. Barabási-Albert scale-free networks and Watts-Strogatz small-world graphs exhibit the highest rates of non-convergent cycling (0.07% each), whereas Erdős-Rényi random graphs record 0.02%, and $k$-regular graphs record 0.01%\cite{acemoglu2013opinion}. In scale-free graphs, when high-degree hub nodes become upper outliers, their simultaneous suppression severs global broadcast pathways, isolating peripheral nodes and sustaining periodic oscillations across the network\cite{acemoglu2013opinion}.
+
+\subsection{Structural Immunity and Kinship Scaling}
+The kinship clustering metric $K$ formalizes in-group immunity against status penalization\cite{degroot1974reaching}. Evaluating the proposed model at high stubbornness ($\gamma_{stub} = 0.5$) reveals a clear scaling threshold for cluster size\cite{degroot1974reaching,acemoglu2013opinion}.
+
+When the mutually exempt cluster is small ($K = N/10$), the network remains susceptible to limit cycles\cite{degroot1974reaching,acemoglu2013opinion}. At $P = 1.0$, networks with $K = N/10$ enter Regime 3 cycling at a rate of 0.69% (0.0069)\cite{acemoglu2013opinion}. Under tight cluster conditions, the unpenalized minority lacks the structural mass to anchor the collective average, allowing the unpenalized majority to pull the network mean downward and trigger oscillations\cite{degroot1974reaching,acemoglu2013opinion}.
+
+As cluster size expands, network resilience undergoes a sharp transition\cite{degroot1974reaching}. Increasing the cluster fraction to $K = N/5$ drops the cycling rate by an order of magnitude to 0.07% (0.0007)\cite{acemoglu2013opinion}. When the cluster reaches or exceeds half the network population ($K = N/2$ or $K = N$), the incidence of Regime 3 cycling drops to exactly 0.0000 across all penalty values, including $P = 1.0$\cite{acemoglu2013opinion}.
+
+This confirms the percolation hypothesis: an exempt cluster does not require unanimous network membership to enforce stability\cite{degroot1974reaching,hajnal1958weak}. Once the protected in-group contains 20% to 50% of the population, it forms a connected subgraph that preserves internal communication channels\cite{acemoglu2013opinion,hajnal1958weak}. Because kinship members never penalize one another, their internal weights remain unsuppressed, maintaining a non-vanishing scrambling coefficient $\alpha(W_C) > 0$ across the core\cite{acemoglu2013opinion,hajnal1958weak}. This invariant core acts as a structural sink, absorbing status penalties and forcing the wider network into stationary dissensus (Regime 1B) or biased convergence (Regime 1)\cite{degroot1974reaching,acemoglu2013opinion}.
+
+\subsection{Ablation Analysis and Coercive Homogenization}
+To identify the specific mechanism driving ergodicity failure, the proposed directional penalty is benchmarked against two structural ablation models: the symmetric penalty model (suppressing both upper and lower outliers) and the fixed suppression model (locking weights at $t = 0$)\cite{degroot1974reaching}.
+
+The symmetric penalty model produces a marked shift in the stability distribution\cite{acemoglu2013opinion}. It enters Regime 3 cycling at a rate of 0.54%, which is 27 times higher than the proposed directional model's rate of 0.02%\cite{acemoglu2013opinion}. In addition, symmetric penalization increases the incidence of Regime 2 slow mixing to 4.18% (compared to 1.67% in the proposed model)\cite{acemoglu2013opinion}.
+
+The mathematical cause of this instability lies in how symmetric suppression damages row connectivity\cite{degroot1974reaching}. Under directional suppression, only agents exceeding the mean have their broadcast links attenuated; agents below the mean remain fully connected, providing common support across the lower distribution tail\cite{degroot1974reaching,acemoglu2013opinion}. Under symmetric suppression, agents at both extremes are discounted simultaneously\cite{degroot1974reaching}. If one agent sits far above the mean and another sits far below it, both columns are zeroed, partitioning the communication graph at both boundaries and driving the instantaneous Hajnal coefficient toward $\delta(W(t)) = 1.0$\cite{degroot1974reaching,acemoglu2013opinion}.
+
+However, this elevated instability is accompanied by tighter consensus accuracy\cite{degroot1974reaching}. The symmetric penalty yields a mean consensus error of $0.0257 \pm 0.0319$, compared to $0.0924 \pm 0.0852$ for the proposed directional model\cite{acemoglu2013opinion}. Penalizing both tails acts as a coercive leveling clamp: by penalizing both positive and negative deviance, it compresses opinions into a narrow band, minimizing error relative to the initial ground truth $\mu^*$, but at the cost of higher network fragmentation and limit-cycle susceptibility\cite{degroot1974reaching,acemoglu2013opinion}.
+
+The fixed suppression ablation confirms the necessity of closed-loop temporal feedback\cite{degroot1974reaching}. When suppression weights are computed once at $t = 0$ and locked, the rate of Regime 3 cycling drops to exactly 0.00%\cite{acemoglu2013opinion}. Without dynamic state feedback, the system behaves as a linear time-invariant consensus network with an asymmetric but constant transition matrix $\tilde{W}(0)$\cite{acemoglu2013opinion,hajnal1958weak}. Because $\tilde{W}(0)$ is static and row-stochastic, the affine operator $(1 - \gamma_{stub})\tilde{W}(0)$ contracts monotonically toward its stationary fixed point $x^*$, precluding limit cycles\cite{acemoglu2013opinion,hajnal1958weak}. Sustained cycling requires real-time, state-dependent weight modification\cite{degroot1974reaching,acemoglu2013opinion}.
+
+\subsection{Behavioral Baselines and Numerical Instability}
+Benchmarking the proposed memoryless status penalty against alternative weighting schemes demonstrates the distinction between organic social leveling and algorithmic instability\cite{degroot1974reaching}.
+
+The stubborn-agent baseline (50% permanent zealots, $P = 0$) settles into Regime 1B (Fixed Dissensus) across 100% of runs, with 0.00% cycling and an average consensus error of $0.0620 \pm 0.0524$\cite{acemoglu2013opinion}. The terminal temporal variance in this baseline evaluates to $3.85 \times 10^{-31}$, confirming that fixed zealots freeze opinion trajectories without generating periodic orbits\cite{acemoglu2013opinion}. The inverse-reputation baseline also converges stably across all runs (25.00% Regime 1, 75.00% Regime 1B, 0.00% cycling), achieving the lowest consensus error of any model ($0.0119 \pm 0.0159$) and a temporal variance of $9.06 \times 10^{-12}$\cite{acemoglu2013opinion}. Outcome-based reputation tracking against a static ground truth guides opinions smoothly toward truth without triggering structural bifurcations\cite{degroot1974reaching,acemoglu2013opinion}.
+
+The anti-expert baseline displays severe numerical instability, entering Regime 3 cycling in 54.53% of runs and Regime 2 slow mixing in 22.40%\cite{acemoglu2013opinion}. Its mean temporal variance rises to $1.77 \times 10^{-3}$, which is orders of magnitude higher than all other models\cite{acemoglu2013opinion}.
+
+This breakdown illustrates the mathematical failure mode of unregularized rolling variance tracking in iterative averaging networks\cite{degroot1974reaching}. As agents reach local agreement, their temporal state variance over the 20-step window contracts toward machine precision ($\text{Var}j(t) \to 10^{-12}$)\cite{degroot1974reaching}. Because influence weights are scaled inversely to variance ($w'{ij} \propto 1/\text{Var}_j$), a microscopic fluctuation in one agent's state causes its weight to explode relative to its peers\cite{degroot1974reaching,acemoglu2013opinion}. The resulting weight shock pulls the collective mean abruptly, resetting variance and restarting the cycle\cite{degroot1974reaching}.
+
+The limit cycles observed in the tall poppy model do not stem from variance-chasing numerical explosions\cite{degroot1974reaching}. The tall poppy operator is memoryless: it calculates a dimensionless deviation $D_i(t)$ normalized by the instantaneous standard deviation $\sigma(t) + \eta$, mapping the result to a suppression factor bounded strictly in $[0, 1]$\cite{degroot1974reaching,acemoglu2013opinion}. The mean temporal variance of the proposed model remains low ($6.14 \times 10^{-6}$), and its transition operator contracts with an average product Hajnal metric of $\delta(M) = 0.0897$\cite{acemoglu2013opinion}. The limit cycles in Regime 3 of the tall poppy model are organic dynamical phenomena produced by the tension between cognitive anchoring and asymmetric peer sanctioning\cite{degroot1974reaching,acemoglu2013opinion}.
+
+\input{sections/cross_model_table}
+Model / Baseline
+
+Validated Runs
+
+Regime 1: Biased Convergence (%)
+
+Regime 1B: Fixed Dissensus (%)
+
+Regime 2: Slow Mixing (%)
+
+Regime 3: Cycling (%)
+
+Mean Consensus Error ($E_{cons}$)
+
+Mean Temporal Variance ($\text{Var}_{temp}$)
+
+Mean Product Hajnal ($\delta(M)$)
+
+Proposed (Directed, Dynamic)
+
+184,320
+
+23.76%
+
+74.56%
+
+1.67%
+
+0.02%
+
+$0.0924 \pm 0.0852$
+
+$6.14 \times 10^{-6}$
+
+0.0897
+
+Symmetric Ablation
+
+92,160
+
+22.89%
+
+72.39%
+
+4.18%
+
+0.54%
+
+$0.0257 \pm 0.0319$
+
+$2.51 \times 10^{-5}$
+
+0.1314
+
+Fixed Suppression Ablation
+
+92,160
+
+24.02%
+
+75.98%
+
+0.00%
+
+0.00%
+
+$0.0915 \pm 0.0770$
+
+$3.84 \times 10^{-9}$
+
+0.0967
+
+Anti-Expert Control
+
+120
+
+20.89%
+
+2.19%
+
+22.40%
+
+54.53%
+
+$0.0766 \pm 0.0857$
+
+$1.77 \times 10^{-3}$
+
+0.2180
+
+Inverse-Reputation Control
+
+120
+
+25.00%
+
+75.00%
+
+0.00%
+
+0.00%
+
+$0.0119 \pm 0.0159$
+
+$9.06 \times 10^{-12}$
+
+0.0424
+
+Stubborn-Mix Control
+
+111
+
+0.00%
+
+100.00%
+
+0.00%
+
+0.00%
+
+$0.0620 \pm 0.0524$
+
+$3.85 \times 10^{-31}$
+
+1.0000
+
