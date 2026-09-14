@@ -1,0 +1,17 @@
+gamma_stub,topology,regime,count
+0.0,BA,Regime 1 (Biased Convergence),120
+0.0,ER,Regime 1 (Biased Convergence),120
+0.0,WS,Regime 1 (Biased Convergence),120
+0.0,k-regular,Regime 1 (Biased Convergence),120
+0.1,BA,Regime 1B (Fixed Dissensus),120
+0.1,ER,Regime 1B (Fixed Dissensus),120
+0.1,WS,Regime 1B (Fixed Dissensus),120
+0.1,k-regular,Regime 1B (Fixed Dissensus),120
+0.2,BA,Regime 1B (Fixed Dissensus),120
+0.2,ER,Regime 1B (Fixed Dissensus),120
+0.2,WS,Regime 1B (Fixed Dissensus),120
+0.2,k-regular,Regime 1B (Fixed Dissensus),120
+0.5,BA,Regime 1B (Fixed Dissensus),120
+0.5,ER,Regime 1B (Fixed Dissensus),120
+0.5,WS,Regime 1B (Fixed Dissensus),120
+0.5,k-regular,Regime 1B (Fixed Dissensus),120
