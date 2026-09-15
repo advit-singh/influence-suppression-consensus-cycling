@@ -1,6 +1,6 @@
 model,expected_runs,actual_runs,coverage_pct,missing_runs
 proposed,122880,122880,100.0,0
-symmetric,122880,118911,96.77,3969
+symmetric,122880,122880,100.0,0
 fixed_suppression,122880,122880,100.0,0
 anti-expert,1920,1920,100.0,0
 inverse-reputation,1920,1920,100.0,0

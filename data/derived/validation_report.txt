@@ -1,21 +1,21 @@
-Validated rows: 368,991
+Validated rows: 372,960
 Source CSV: C:\Users\14697\coding\independent research\Influence Suppression and Consensus Cycling\data\full_results_v2.csv
 
 Coverage by model:
              model  expected_runs  actual_runs  coverage_pct  missing_runs
-          proposed         122880       122880        100.00             0
-         symmetric         122880       118911         96.77          3969
- fixed_suppression         122880       122880        100.00             0
-       anti-expert           1920         1920        100.00             0
-inverse-reputation           1920         1920        100.00             0
-      stubborn-mix            480          480        100.00             0
+          proposed         122880       122880         100.0             0
+         symmetric         122880       122880         100.0             0
+ fixed_suppression         122880       122880         100.0             0
+       anti-expert           1920         1920         100.0             0
+inverse-reputation           1920         1920         100.0             0
+      stubborn-mix            480          480         100.0             0
 
 Global regime distribution:
                            regime  count   pct
-      Regime 1B (Fixed Dissensus) 273024 73.99
-    Regime 1 (Biased Convergence)  86808 23.53
-           Regime 2 (Slow Mixing)   7454  2.02
+      Regime 1B (Fixed Dissensus) 276003 74.00
+    Regime 1 (Biased Convergence)  87798 23.54
+           Regime 2 (Slow Mixing)   7454  2.00
 Regime 3 (Non-convergent Cycling)   1705  0.46
 
 Checkpoint entries: 372,960
-Checkpoint minus clean CSV rows: 3,969
+Checkpoint minus clean CSV rows: 0

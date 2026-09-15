@@ -379,3 +379,21 @@
 [2026-09-13 19:45:46] Executing Batch 187/187 (960 configurations)...
 [2026-09-13 19:48:03] Batch 187 saved. Duration: 137.0s. CSV size: 55.44 MB. Total complete: 372,960
 [2026-09-13 19:48:03] Simulation Array Complete! Total execution time: 4.96 hours.
+[2026-09-15 14:43:58] Missing symmetric configurations: 122,880
+[2026-09-15 14:43:58] Warming up numba kernels
+[2026-09-15 14:44:02] Running batch 1 (500 configs)
+[2026-09-15 14:44:17] Running batch 2 (500 configs)
+[2026-09-15 14:44:18] Running batch 3 (500 configs)
+[2026-09-15 14:44:19] Running batch 4 (500 configs)
+[2026-09-15 14:44:20] Running batch 5 (500 configs)
+[2026-09-15 14:50:28] Missing symmetric configurations: 3,969
+[2026-09-15 14:50:28] Warming up numba kernels
+[2026-09-15 14:50:30] Running batch 1 (500 configs)
+[2026-09-15 14:50:48] Running batch 2 (500 configs)
+[2026-09-15 14:50:49] Running batch 3 (500 configs)
+[2026-09-15 14:50:50] Running batch 4 (500 configs)
+[2026-09-15 14:50:50] Running batch 5 (500 configs)
+[2026-09-15 14:50:51] Running batch 6 (500 configs)
+[2026-09-15 14:50:52] Running batch 7 (500 configs)
+[2026-09-15 14:50:52] Running batch 8 (469 configs)
+[2026-09-15 14:50:53] Finished backfill. Checkpoint size: 372,960

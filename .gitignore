@@ -28,3 +28,6 @@ paper/main.out
 Thumbs.db
 desktop.ini
 _audit/
+data/*.backup.csv
+data/*.clean.csv
+data/rerun_symmetric.log
