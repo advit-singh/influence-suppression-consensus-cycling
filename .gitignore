@@ -18,7 +18,12 @@ venv/
 *.out
 *.synctex.gz
 *.toc
-paper/main.pdf
+paper/build.log
+paper/main.log
+paper/main.aux
+paper/main.bbl
+paper/main.blg
+paper/main.out
 .DS_Store
 Thumbs.db
 desktop.ini

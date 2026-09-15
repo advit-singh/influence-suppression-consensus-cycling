@@ -34,14 +34,8 @@ When $P = 0.0$, the suppression factor is identically $f_i(t) = 1.0$ for all nod
 
 When $K = N$, all agents are mutually exempt, deactivating the penalty; runs where $K = N$ with $P > 0.0$ are pruned as identical duplicates of the $P = 0.0$ baseline\cite{acemoglu2013opinion}.
 
-\subsection{Ablation Models}
 To isolate the exact mechanical drivers of ergodicity failure and determine whether non-convergent cycling requires directional asymmetry or active temporal feedback, the pipeline integrates two structural ablation models\cite{degroot1974reaching}:
 
-Symmetric Penalty Ablation: This model modifies the one-sided suppression operator to penalize absolute standardized deviations, punishing upper outliers and lower outliers alike\cite{degroot1974reaching}: $$f_i(t) = \max\big(0, ; 1 - P \cdot h(|D_i(t)|)\big)$$ This configuration evaluates whether non-convergent cycling stems generally from suppressing extreme values at both distribution tails, or whether it requires the asymmetric, directional downward drag produced by penalizing only high performers\cite{degroot1974reaching}.
-
-Fixed Suppression Ablation (Static Weighting): This model calculates the standardized deviations and suppression factors once at initialization ($t = 0$) and locks the resulting matrix weights for all remaining time steps ($t = 1, \dots, 500$)\cite{degroot1974reaching,friedkin1990social}: $$f_i(t) = f_i(0), \quad \tilde{W}(t) = \tilde{W}(0) \quad \forall t \ge 0$$ Removing dynamic state feedback isolates whether sustained periodic limit cycles depend on ongoing closed-loop interactions or whether a static reduction in outlier influence suffices\cite{degroot1974reaching}.
-
-\subsection{Control Baselines}
 The proposed state-dependent penalty is benchmarked against three established consensus mechanisms from computational social science and distributed control\cite{degroot1974reaching}:
 
 Anti-Expert Baseline: Evaluates whether rolling historical variance tracking can suppress erratic agents without destabilizing network convergence\cite{degroot1974reaching}. A sliding ring buffer records each agent's raw state over the previous 20 time steps\cite{friedkin1990social,acemoglu2013opinion}. For $t \ge 2$, incoming influence weights are scaled inversely to the agent's rolling sample variance\cite{friedkin1990social,acemoglu2013opinion}: $$\text{Var}j(t) = \frac{1}{L} \sum{\tau=0}^{L-1} \big(x_j(t - \tau) - \bar{x}{j, t}\big)^2 + \epsilon_0$$ $$w'{ij}(t) = w_{ij}(0) \cdot \frac{1}{\text{Var}_j(t)}$$ where $L = \min(t + 1, 20)$ and $\epsilon_0 = 10^{-6}$ provides numerical regularization\cite{friedkin1990social,acemoglu2013opinion}. Rows are subsequently normalized to preserve stochasticity\cite{friedkin1990social}. During the initial burn-in phase ($t < 2$), agents default to baseline weights $W(0)$\cite{acemoglu2013opinion}.
@@ -74,98 +68,3 @@ Regime 1B (Fixed Dissensus): Assigned if agent estimates freeze into a stationar
 Regime 2 (Slow Mixing): Assigned to intermediate executions that do not satisfy the criteria for stationary consensus, fixed dissensus, or active cycling, capturing prolonged relaxation transients and boundary chattering\cite{degroot1974reaching,acemoglu2013opinion}: $$\text{Var}{temp} < 10^{-3}, \quad \text{Var}{temp} \ge 10^{-4}, \quad \text{and} \quad \sigma_{\infty}^2 \ge 10^{-4}$$
 
 \input{sections/parameter_table}
-Parameter Category
-
-Variable Symbol
-
-Evaluated Values / Settings
-
-Combinatorial Scope
-
-Network Topologies
-
-$G$
-
-Erdős-Rényi ($p=0.2$), Barabási-Albert ($m=2$), Watts-Strogatz ($k=4, p=0.1$), $k$-Regular ($k=4$)
-
-\section{graph classes (connected, self-loops added)\cite{degroot1974reaching,acemoglu2013opinion}}
-Population Sizes
-
-$N$
-
-$20, 50, 100, 200$ nodes
-
-\section{network scales\cite{degroot1974reaching}}
-Initial States
-
-$x_i(0)$
-
-Continuous uniform distribution $\mathcal{U}(-1, 1)$
-
-Zero-centered bounded opinion domain\cite{degroot1974reaching}
-
-Penalty Magnitude
-
-$P$
-
-$0.0, 0.1, 0.2, 0.3, 0.5, 0.7, 0.9, 1.0$
-
-\section{suppression severity levels\cite{degroot1974reaching}}
-Cognitive Anchoring
-
-$\gamma_{stub}$
-
-$0.0, 0.1, 0.2, 0.5$
-
-\section{stubbornness levels\cite{degroot1974reaching}}
-Penalty Response Curves
-
-$h(D)$
-
-Linear ($D$), Step ($\theta=0.5$), Tanh ($\tanh(D)$)
-
-\section{functional shapes\cite{degroot1974reaching}}
-Kinship Cluster Size
-
-$K$
-
-$N, N/2, N/5, N/10$
-
-\section{in-group immunity fractions\cite{degroot1974reaching}}
-Ablation Configurations
-
-$\text{Model}$
-
-Proposed (Directed Dynamic), Symmetric (Both Tails), Fixed (Static $t=0$)
-
-\section{structural mechanism variants\cite{degroot1974reaching}}
-Baseline Benchmarks
-
-$\text{Control}$
-
-Anti-Expert (Inverse Variance), Inverse-Reputation (MAD), Stubborn-Mix (50% Zealots)
-
-\section{comparative algorithms\cite{degroot1974reaching}}
-Stochastic Replications
-
-$\text{Seed}$
-
-\section{independent pseudo-random seeds per parameter tuple}
-Variance reduction across realizations\cite{degroot1974reaching}
-
-Simulation Horizon
-
-$T$
-
-$T = 500$ discrete time steps (final 100 steps analyzed)
-
-Fixed evaluation window\cite{degroot1974reaching}
-
-Total Validated Runs
-
-—
-
-368,991 completed executions
-
-Full factorial coverage (pruned duplicates)\cite{acemoglu2013opinion}
-

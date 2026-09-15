@@ -81,6 +81,23 @@ def paragraph_to_latex(paragraph: str) -> str:
         return "\\input{sections/parameter_table}\n"
     if paragraph.startswith("Cross-Model Performance Summary"):
         return "\\input{sections/cross_model_table}\n"
+    if paragraph.startswith("Model / Baseline"):
+        return ""
+    if paragraph in {
+        "Validated Runs",
+        "Regime 1: Biased Convergence (%)",
+        "Regime 1B: Fixed Dissensus (%)",
+        "Regime 2: Slow Mixing (%)",
+        "Regime 3: Cycling (%)",
+        "Mean Consensus Error ($E_{cons}$)",
+        "Mean Temporal Variance ($\\text{Var}_{temp}$)",
+        "Mean Product Hajnal ($\\delta(M)$)",
+    }:
+        return ""
+    if re.match(r"^(Proposed|Symmetric|Fixed|Anti-Expert|Inverse|Stubborn|\$|[0-9])", paragraph):
+        # Drop the markdown-style table body; LaTeX table is injected separately.
+        if "%" in paragraph or "Control" in paragraph or "Ablation" in paragraph:
+            return ""
     if is_heading(paragraph):
         title = re.sub(r"^\d+(\.\d+)*\s+", "", paragraph)
         title = title.replace("$", "")
