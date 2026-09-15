@@ -5,6 +5,8 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
+from analysis.fix_latex_math import fix_math
+
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "_audit" / "new_paper.txt"
 OUT_DIR = ROOT / "paper" / "sections"
@@ -65,7 +67,8 @@ def convert_citations(text: str) -> str:
     text = text.replace("{0.0, 0.1, 0.2, 0.3, 0.5, 0.7, 0.9, 1.0}", r"\{0.0,0.1,0.2,0.3,0.5,0.7,0.9,1.0\}")
     text = text.replace("{0.0, 0.1, 0.2, 0.5}", r"\{0.0,0.1,0.2,0.5\}")
     text = text.replace("{N, N/2, N/5, N/10}", r"\{N,N/2,N/5,N/10\}")
-    text = text.replace("368,993", "368,991")
+    text = text.replace("368,993", "372,960")
+    text = text.replace("368,991", "372,960")
     return text
 
 
@@ -129,7 +132,7 @@ def write_sections() -> None:
     sections = split_sections(paragraphs)
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     for name, content in sections.items():
-        latex = "".join(paragraph_to_latex(p) for p in content)
+        latex = fix_math("".join(paragraph_to_latex(p) for p in content))
         (OUT_DIR / name).write_text(latex, encoding="utf-8")
 
 

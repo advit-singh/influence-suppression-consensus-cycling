@@ -13,9 +13,9 @@ When agents suppress high-performing peers based on positive deviation from the 
 | **2** | Slow mixing | 2.0% |
 | **3** | Non-convergent cycling | 0.5% |
 
-In the proposed directional model, limit cycles are rare (0.02%) and emerge only under maximal penalty with non-zero stubbornness. Kinship clusters of size at least **N/5** eliminate cycling entirely. Symmetric suppression increases cycling to 0.54%; the anti-expert inverse-variance baseline fails in 54.5% of runs.
+In the proposed directional model, limit cycles are rare (0.02%) and emerge only under maximal penalty with non-zero stubbornness. Kinship clusters of size at least **N/5** eliminate cycling entirely. Symmetric suppression increases cycling to 0.52%; the anti-expert inverse-variance baseline fails in 54.5% of runs.
 
-**368,991** validated simulation runs across six models, four topologies, and a pruned penalty/stubbornness/kinship grid.
+**372,960** validated simulation runs across six models, four topologies, and a pruned penalty/stubbornness/kinship grid.
 
 ## Repository layout
 
@@ -42,7 +42,7 @@ See [docs/reproduction.md](docs/reproduction.md) for details.
 
 ## Data note
 
-The symmetric ablation model is 96.8% complete (3,969 runs missing from the checkpoint). All reported statistics use the 368,991 validated rows after removing two corrupted entries.
+The full pruned parameter grid contains 372,960 configurations across six models. All reported statistics use the complete validated dataset in `data/full_results_v2.csv`.
 
 ## Citation
 
